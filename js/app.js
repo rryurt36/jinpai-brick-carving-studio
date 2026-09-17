@@ -172,6 +172,7 @@
   const closeCultureButton = document.getElementById("closeCultureButton");
   const infoModal = document.getElementById("infoModal");
   const closeModalButton = document.getElementById("closeModalButton");
+  const portraitContinueButton = document.getElementById("portraitContinueButton");
   const modalVisual = document.getElementById("modalVisual");
   const modalKicker = document.getElementById("modalKicker");
   const modalTitle = document.getElementById("modalTitle");
@@ -1196,6 +1197,14 @@
     }
   }
 
+  function enablePortraitMode() {
+    document.body.classList.add("allow-portrait");
+    document.getElementById("rotateDeviceNotice").setAttribute("aria-hidden", "true");
+    window.setTimeout(function () {
+      renderer.resize();
+    }, 80);
+  }
+
   function bindEvents() {
     quickCompleteButton.addEventListener("click", completeCurrentStep);
     nextButton.addEventListener("click", advanceStep);
@@ -1232,6 +1241,7 @@
     closeCultureButton.addEventListener("click", closeCultureDrawer);
     drawerBackdrop.addEventListener("click", closeCultureDrawer);
     closeModalButton.addEventListener("click", closeModal);
+    portraitContinueButton.addEventListener("click", enablePortraitMode);
     infoModal.addEventListener("click", function (event) {
       if (event.target === infoModal) {
         closeModal();
@@ -1240,6 +1250,17 @@
     document.addEventListener("keydown", handleKeyDown);
     window.addEventListener("resize", function () {
       renderer.resize();
+    });
+    window.addEventListener("orientationchange", function () {
+      if (window.matchMedia("(orientation: landscape)").matches) {
+        document.body.classList.remove("allow-portrait");
+        document.getElementById("rotateDeviceNotice").setAttribute("aria-hidden", "true");
+      } else {
+        document.getElementById("rotateDeviceNotice").setAttribute("aria-hidden", "false");
+      }
+      window.setTimeout(function () {
+        renderer.resize();
+      }, 180);
     });
   }
 
